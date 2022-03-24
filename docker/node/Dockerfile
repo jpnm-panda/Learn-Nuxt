@@ -1,0 +1,15 @@
+FROM node:14.6.0-alpine
+RUN mkdir -p /var/www/frontend
+# timezone
+ARG Asia/Tokyo
+WORKDIR /var/www/frontend
+COPY ./frontend/ /var/www/frontend/
+
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache make gcc g++ python && \
+    yarn install
+
+EXPOSE 3000
+
+ENTRYPOINT ["yarn", "run", "dev"]
