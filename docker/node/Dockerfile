@@ -1,9 +1,9 @@
 FROM node:14.6.0-alpine
-RUN mkdir -p /var/www/nuxt
+RUN mkdir -p /var/www/frontend
 # timezone
 ARG Asia/Tokyo
-WORKDIR /var/www/nuxt
-COPY ./nuxt/ /var/www/nuxt/
+WORKDIR /var/www/frontend
+COPY ./frontend/ /var/www/frontend/
 
 RUN apk update && \
     apk upgrade && \

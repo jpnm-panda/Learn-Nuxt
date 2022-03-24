@@ -1,25 +1,19 @@
-
-FROM php:8.1-fpm-bullseye
+FROM php:7.4.1-fpm
 # timezone
 ARG Asia/Tokyo
 
 COPY ./docker/php/php.ini /usr/local/etc/php/
-COPY ./laravel/ /var/www/laravel/
+COPY ./backend/ /var/www/backend/
+COPY install-composer.sh /
 
-WORKDIR /var/www/laravel
+WORKDIR /var/www/backend
 
-RUN apk upgrade --update && apk add --no-cache \
-  coreutils freetype-dev jpeg-dev libjpeg-turbo-dev libpng-dev libmcrypt-dev \
-  git vim unzip tzdata \
-  libltdl && \
-  docker-php-ext-install pdo_mysql mysqli mbstring && \
-  docker-php-ext-install -j$(nproc) iconv && \
-  docker-php-ext-configure gd \
-  --with-freetype-dir=/usr/include/ \
-  --with-jpeg-dir=/usr/include/ && \
-  docker-php-ext-install -j$(nproc) gd && \
-  cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && \
-  apk del tzdata && \
-  rm -rf /var/cache/apk/*
+RUN apt-get update && \
+    apt-get -y install \
+    git \
+    zip \
+    unzip \
+    vim \
+    && docker-php-ext-install pdo_mysql bcmath
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
