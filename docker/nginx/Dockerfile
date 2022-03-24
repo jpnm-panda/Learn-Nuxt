@@ -1,0 +1,10 @@
+FROM node:16-alpine
+# timezone
+ARG Asia/Tokyo
+COPY ./docker/nginx/conf.d/ /etc/nginx/conf.d/
+COPY ./docker/nginx/logs/ /etc/nginx/logs/
+COPY ./laravel/ /var/www/laravel/
+RUN apk update && apk --update add tzdata && \
+  cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && \
+  apk del tzdata && \
+  rm -rf /var/cache/apk/*
