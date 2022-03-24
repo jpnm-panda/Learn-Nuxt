@@ -4,9 +4,10 @@ ARG Asia/Tokyo
 
 COPY ./docker/php/php.ini /usr/local/etc/php/
 COPY ./backend/ /var/www/backend/
-COPY install-composer.sh /
+COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/backend
+COPY --from=node:10.22 /usr/local/bin /usr/local/bin
+COPY --from=node:10.22 /usr/local/lib /usr/local/lib
 
 RUN apt-get update && \
     apt-get -y install \
@@ -16,4 +17,4 @@ RUN apt-get update && \
     vim \
     && docker-php-ext-install pdo_mysql bcmath
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+WORKDIR /var/www/backend
